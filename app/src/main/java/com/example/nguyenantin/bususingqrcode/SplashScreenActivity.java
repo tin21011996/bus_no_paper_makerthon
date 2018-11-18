@@ -18,7 +18,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Animation
     LinearLayout linearLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) throws RuntimeException {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 

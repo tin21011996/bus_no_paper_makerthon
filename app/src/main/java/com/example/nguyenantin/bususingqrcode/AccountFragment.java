@@ -1,11 +1,15 @@
 package com.example.nguyenantin.bususingqrcode;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +27,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 
 public class AccountFragment extends Fragment {
 
     private EditText edit_SeriCash;
     private Button btn_addCash;
+    private static EndUser user;
+    private static String rollback = "false";
+    private Dialog dialog;
+
+    public static AccountFragment newInstance() {
+        return new AccountFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,20 +48,23 @@ public class AccountFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_account, container, false);
+                             Bundle savedInstanceState) throws RuntimeException {
+        final View view = inflater.inflate(R.layout.fragment_account, container, false);
         // Inflate the layout for this fragment
         edit_SeriCash = (EditText) view.findViewById(R.id.edit_SeriCash);
         btn_addCash = (Button) view.findViewById(R.id.btn_addCash);
         btn_addCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DialogFragment dialog = new MyDialogFragment();
+                dialog.show(getFragmentManager(), "MyDialogFragmentTag");
                 sendPost();
+                edit_SeriCash.setText("");
             }
         });
         return view;
     }
-    public void sendPost() {
+    public void sendPost() throws RuntimeException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -87,13 +103,15 @@ public class AccountFragment extends Fragment {
 
                     String response = stringBuilder.toString();
                     JSONObject jsonResponse = new JSONObject(response);
+
                     JSONObject content = jsonResponse.getJSONObject("content");
 
                     Log.i("MSG" , jsonResponse.getString("status"));
-                    if (jsonResponse.getString("status").equals(true)) {
-                        SharedPrefManager.getInstance(getContext()).getUser().setMoney(content.getInt("money"));
-                        HomeFragment homeFragment = new HomeFragment();
-                        homeFragment.onStart();
+                    if (jsonResponse.getString("status").equals("true")) {
+                        user = SharedPrefManager.getInstance(getContext()).getUser();
+                        user.setMoney(content.getInt("money"));
+                        SharedPrefManager.getInstance(getContext()).userLogin(user);
+                        HomeFragment.refresh(String.valueOf(user.getMoney()));
                     }
 
                     conn.disconnect();

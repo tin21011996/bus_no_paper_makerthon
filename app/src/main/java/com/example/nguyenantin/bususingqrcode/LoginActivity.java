@@ -58,6 +58,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (SharedPrefManager.getInstance(this).isLoggedIn()) {
+            finish();
+            startActivity(new Intent(this, BottomNavigationBarActivity.class));
+        }
+
         editUsername = (EditText) findViewById(R.id.edit_Username);
         editPassword = (EditText) findViewById(R.id.edit_Password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -169,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i("MSG" , content.getString("qrcode"));
                     conn.disconnect();
                     if (qrcode!=null) {
-                        EndUser user  = new EndUser(editUsername.getText().toString().trim(), content.getString("usertype"), content.getString("email"), content.getString("qrcode"), (float) content.getDouble("money"));
+                        EndUser user  = new EndUser(editUsername.getText().toString().trim(), content.getString("usertype"), content.getString("email"), content.getString("qrcode"), content.getInt("money"));
                         SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
                         intent = new Intent( LoginActivity.this, BottomNavigationBarActivity.class);
                         finish();

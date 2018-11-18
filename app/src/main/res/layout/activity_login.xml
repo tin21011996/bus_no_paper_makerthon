@@ -60,6 +60,7 @@
                             android:background="@color/colorWhite"
                             android:textSize="16dp"
                             android:singleLine="true"
+                            android:imeOptions="actionDone"
                             android:layout_height="match_parent"
                             android:textColor="@color/colorBlack"
                             android:hint="@string/hintUsername" />
@@ -100,6 +101,8 @@
                         android:layout_height="match_parent"
                         android:textColor="#a99f9f"
                         android:gravity="center"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
                         android:text="@string/textForgetPassword" />
                 </LinearLayout>
 

@@ -29,6 +29,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="textPublicPeople">Tài khoản thường</string>
     <string name="textPrivatePeople">Tài khoản sinh viên</string>
-
+    <string name="textPrice">Khoản dư</string>
+    <string name="textLogout">Đăng xuất</string>
+    <string name="money">$</string>
 
 </resources>

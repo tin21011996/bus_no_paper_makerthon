@@ -116,7 +116,7 @@
                                 android:layout_weight="2"
                                 android:textStyle="bold"
                                 android:gravity="center"
-                                android:text="@string/textAmountOfMoney" />
+                                android:text="@string/textPrice" />
 
                             <TextView
                                 android:id="@+id/txt_money"
@@ -172,6 +172,18 @@
                                 android:background="@drawable/radios_background"
                                 android:layout_height="match_parent"
                                 android:text="@string/textChangeProfile"
+                                android:textColor="@color/colorWhite"
+                                android:textAllCaps="false"
+                                android:shadowRadius="@android:integer/config_longAnimTime"
+                                android:layout_margin="6dp"
+                                android:textSize="16dp" />
+                            <Button
+                                android:layout_weight="1"
+                                android:id="@+id/btn_Logout"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/radios_red_background"
+                                android:layout_height="match_parent"
+                                android:text="@string/textLogout"
                                 android:textColor="@color/colorWhite"
                                 android:textAllCaps="false"
                                 android:shadowRadius="@android:integer/config_longAnimTime"

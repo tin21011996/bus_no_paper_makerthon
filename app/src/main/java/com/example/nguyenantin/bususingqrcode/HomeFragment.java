@@ -1,19 +1,19 @@
 package com.example.nguyenantin.bususingqrcode;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,36 +23,24 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 
-    public final static int QRcodeWidth = 500 ;
+    private int QRcodeWidth = 500 ;
     private static final String IMAGE_DIRECTORY = "/QRcodeDemonuts";
-    Bitmap bitmap ;
-    private TextView m_money;
+    private Bitmap bitmap ;
+    private static TextView txt_money;
+    private ImageView imageView;
 
-    //    private Button btn;
-    private ActionBar toolbar;
-
-    public HomeFragment() {
-        // Required empty public constructor
+    public static Fragment newInstance() {
+        return new HomeFragment();
     }
-
-    private String username;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,14 +49,18 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState) throws RuntimeException{
         // Inflate the layout for this fragment
-        View homeViewFragment = inflater.inflate(R.layout.fragment_home, container, false);
+        final View homeViewFragment = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ImageView imageView = (ImageView) homeViewFragment.findViewById(R.id.img_CodeQR);
         EndUser user = SharedPrefManager.getInstance(getContext()).getUser();
-        m_money = (TextView) homeViewFragment.findViewById(R.id.txt_money);
-        m_money.setText(String.valueOf((int) user.getMoney()) + " VND");
+
+        imageView = (ImageView) homeViewFragment.findViewById(R.id.img_CodeQR);
+        txt_money = (TextView) homeViewFragment.findViewById(R.id.txt_money);
+        DecimalFormat df = new DecimalFormat("###,###,###");
+        String formatted = df.format(SharedPrefManager.getInstance(getContext()).getUser().getMoney());
+        txt_money.setText(formatted + " VND");
+        Toast.makeText(getContext(), "Vui lòng điền tên đăng nhập", Toast.LENGTH_SHORT).show();
 
         try {
             bitmap = TextToImageEncode(user.getQrcode());
@@ -76,63 +68,17 @@ public class HomeFragment extends Fragment {
             String path = saveImage(bitmap);  //give read write permission
         } catch (WriterException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return homeViewFragment;
     }
 
-    public void sendPost() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(Port.URL_SIGNIN);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-                    conn.setRequestProperty("Accept","application/json");
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
 
-                    JSONObject jsonParam = new JSONObject();
-                    jsonParam.put("username", username.trim());
-
-                    Log.i("JSON", jsonParam.toString());
-                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-                    os.writeBytes(jsonParam.toString());
-
-                    os.flush();
-                    os.close();
-
-                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                    Log.i("MSG" , conn.getResponseMessage());
-
-                    InputStream responseStream = new BufferedInputStream(conn.getInputStream());
-                    BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
-                    String line = "";
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((line = responseStreamReader.readLine()) != null) {
-                        stringBuilder.append(line);
-                    }
-                    responseStreamReader.close();
-
-                    String response = stringBuilder.toString();
-                    JSONObject jsonResponse = new JSONObject(response);
-
-                    Log.i("MSG" , jsonResponse.getString("status"));
-                    JSONObject content = jsonResponse.getJSONObject("content");
-                    Log.i("MSG" , content.getString("qrcode"));
-                    conn.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-    }
-
-    public String saveImage(Bitmap myBitmap) {
+    public String saveImage(Bitmap myBitmap) throws IOException, Exception, RuntimeException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         File wallpaperDirectory = new File(
@@ -163,8 +109,8 @@ public class HomeFragment extends Fragment {
         return "";
 
     }
-    @SuppressLint("ResourceType")
-    private Bitmap TextToImageEncode(String Value) throws WriterException {
+
+    private Bitmap TextToImageEncode(String Value) throws IOException, Exception, WriterException, RuntimeException {
         BitMatrix bitMatrix;
         try {
             bitMatrix = new MultiFormatWriter().encode(
@@ -196,5 +142,11 @@ public class HomeFragment extends Fragment {
 
         bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight);
         return bitmap;
+    }
+
+    public static void refresh(String money) throws RuntimeException {
+        DecimalFormat df = new DecimalFormat("###,###,###");
+        String formatted = df.format(Integer.parseInt(money));
+        txt_money.setText(formatted + " VND");
     }
 }

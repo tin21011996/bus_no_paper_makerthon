@@ -7,12 +7,12 @@ public class EndUser {
     private String usertype;
     private String email;
     private String qrcode;
-    private float money;
+    private int money;
 
     public EndUser() {
     }
 
-    public EndUser(String username, String password, String usertype, String email, String qrcode, float money) {
+    public EndUser(String username, String password, String usertype, String email, String qrcode, int money) {
         this.username = username;
         this.password = password;
         this.usertype = usertype;
@@ -21,7 +21,7 @@ public class EndUser {
         this.money = money;
     }
 
-    public EndUser(String username, String usertype, String email, String qrcode, float money) {
+    public EndUser(String username, String usertype, String email, String qrcode, int money) {
         this.username = username;
         this.usertype = usertype;
         this.email = email;
@@ -29,11 +29,11 @@ public class EndUser {
         this.money = money;
     }
 
-    public float getMoney() {
+    public int getMoney() {
         return money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(int money) {
         this.money = money;
     }
 

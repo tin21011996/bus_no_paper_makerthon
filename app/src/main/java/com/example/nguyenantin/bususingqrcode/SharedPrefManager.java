@@ -1,5 +1,7 @@
 package com.example.nguyenantin.bususingqrcode;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +40,7 @@ public class SharedPrefManager {
         editor.putString(KEY_USERNAME, user.getUsername());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_PASSWORD, user.getPassword());
-        editor.putFloat(KEY_MONEY, user.getMoney());
+        editor.putInt(KEY_MONEY, user.getMoney());
         editor.putString(KEY_USER_TYPE, user.getUsertype());
         editor.putString(KEY_QR_CODE, user.getQrcode());
         editor.apply();
@@ -59,17 +61,18 @@ public class SharedPrefManager {
                 sharedPreferences.getString(KEY_USER_TYPE, null),
                 sharedPreferences.getString(KEY_EMAIL, null),
                 sharedPreferences.getString(KEY_QR_CODE, null),
-                sharedPreferences.getFloat(KEY_MONEY, -1)
+                sharedPreferences.getInt(KEY_MONEY, -1)
 
         );
     }
 
     //this method will logout the user
-    public void logout() {
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+    public void logout(Context context) throws RuntimeException {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
-        mCtx.startActivity(new Intent(mCtx, LoginActivity.class));
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 }

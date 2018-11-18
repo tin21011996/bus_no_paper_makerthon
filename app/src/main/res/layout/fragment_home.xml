@@ -24,7 +24,6 @@
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"
                 android:textAllCaps="true"
-                android:textAlignment="textEnd"
                 android:drawableRight="@drawable/ic_euro_coin"
                 android:textSize="18dp"
                 android:gravity="center|left"
@@ -36,8 +35,8 @@
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"
                 android:textSize="20dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginLeft="4dp"
-                android:textAlignment="textStart"
                 android:gravity="center"
                 android:text="5000 $"/>
         </LinearLayout>
