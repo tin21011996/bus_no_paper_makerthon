@@ -9,7 +9,7 @@ import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-public class MyDialogFragment extends DialogFragment {
+public class FailedDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class MyDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Thông báo");
-        builder.setMessage("Bạn đã nạp tiền thành công");
+        builder.setMessage("Nạp tiền thất bại, vui long kiem tra so the");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // You don't have to do anything here if you just

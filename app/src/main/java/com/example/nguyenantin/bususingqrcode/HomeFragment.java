@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("###,###,###");
         String formatted = df.format(SharedPrefManager.getInstance(getContext()).getUser().getMoney());
         txt_money.setText(formatted + " VND");
-        Toast.makeText(getContext(), "Vui lòng điền tên đăng nhập", Toast.LENGTH_SHORT).show();
 
         try {
             bitmap = TextToImageEncode(user.getQrcode());

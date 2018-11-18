@@ -51,6 +51,7 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
         createTabIcons();
         tabLayout.getTabAt(1).select();
         tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
+        tabLayout.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#000000"));
 
     }
     private void createTabIcons() throws RuntimeException {

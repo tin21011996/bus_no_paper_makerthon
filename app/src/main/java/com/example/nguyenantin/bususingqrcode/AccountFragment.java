@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -34,8 +35,7 @@ public class AccountFragment extends Fragment {
     private EditText edit_SeriCash;
     private Button btn_addCash;
     private static EndUser user;
-    private static String rollback = "false";
-    private Dialog dialog;
+    private String rollback;
 
     public static AccountFragment newInstance() {
         return new AccountFragment();
@@ -56,14 +56,12 @@ public class AccountFragment extends Fragment {
         btn_addCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialog = new MyDialogFragment();
-                dialog.show(getFragmentManager(), "MyDialogFragmentTag");
                 sendPost();
-                edit_SeriCash.setText("");
             }
         });
         return view;
     }
+
     public void sendPost() throws RuntimeException {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -105,22 +103,21 @@ public class AccountFragment extends Fragment {
                     JSONObject jsonResponse = new JSONObject(response);
 
                     JSONObject content = jsonResponse.getJSONObject("content");
-
+                    rollback = jsonResponse.getString("status");
                     Log.i("MSG" , jsonResponse.getString("status"));
                     if (jsonResponse.getString("status").equals("true")) {
                         user = SharedPrefManager.getInstance(getContext()).getUser();
                         user.setMoney(content.getInt("money"));
                         SharedPrefManager.getInstance(getContext()).userLogin(user);
                         HomeFragment.refresh(String.valueOf(user.getMoney()));
+                        edit_SeriCash.setText("");
                     }
-
                     conn.disconnect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
-
         thread.start();
     }
 }

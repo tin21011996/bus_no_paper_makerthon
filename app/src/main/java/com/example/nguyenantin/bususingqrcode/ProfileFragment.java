@@ -1,9 +1,12 @@
 package com.example.nguyenantin.bususingqrcode;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +56,7 @@ public class ProfileFragment extends Fragment {
         String formatted = df.format(SharedPrefManager.getInstance(getContext()).getUser().getMoney());
         txt_money.setText(formatted + " VND");
 
-        if (user.getUsertype().equals("true")) {
+        if (user.getUsertype().equals("1")) {
             checkstudent.setText(R.string.textPrivatePeople);
         } else {
             checkstudent.setText(R.string.textPublicPeople);
@@ -63,7 +66,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 btn_Logout.setEnabled(false);
-                SharedPrefManager.getInstance(getContext()).logout(getContext());
+                DialogFragment dialogLogout = new AlertDialogLogout();
+                dialogLogout.show(getFragmentManager(), "AlertDialogLogout");
             }
         });
 

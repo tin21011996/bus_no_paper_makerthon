@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Xe Buýt Không Giấy</string>
+    <string name="app_name">BusNoPaper</string>
     <string name="menuHome">Trang Chủ</string>
     <string name="menuProfile">Thông Tin</string>
     <string name="menuAmountOfMoney">Tài Khoản</string>
