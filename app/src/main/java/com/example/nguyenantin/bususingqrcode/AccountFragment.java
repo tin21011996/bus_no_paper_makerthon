@@ -32,7 +32,7 @@ import java.text.DecimalFormat;
 
 public class AccountFragment extends Fragment {
 
-    private EditText edit_SeriCash;
+    private static EditText edit_SeriCash;
     private Button btn_addCash;
     private static EndUser user;
     private String rollback;
@@ -110,7 +110,6 @@ public class AccountFragment extends Fragment {
                         user.setMoney(content.getInt("money"));
                         SharedPrefManager.getInstance(getContext()).userLogin(user);
                         HomeFragment.refresh(String.valueOf(user.getMoney()));
-                        edit_SeriCash.setText("");
                     }
                     conn.disconnect();
                 } catch (Exception e) {
@@ -119,5 +118,6 @@ public class AccountFragment extends Fragment {
             }
         });
         thread.start();
+        edit_SeriCash.setText("");
     }
 }
